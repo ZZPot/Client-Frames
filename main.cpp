@@ -1,10 +1,10 @@
 #include <opencv2/highgui.hpp>
 #include <opencv2/imgproc.hpp>
-#include "ClientFrames.h"
+#include "ScreenFrames/PartFrames/WindowFrames/WindowFrames.h"
 
 int main()
 {
-	client_frames cf;
+	window_frames cf;
 	while(cv::waitKey(15) != 27)
 	{
 		cv::Mat frame = cf.nextFrame();

@@ -1,61 +1,17 @@
-#include "ClientFrames.h"
-#include <opencv2/highgui.hpp>
-#include <opencv2/tracking/tracker.hpp>
+#include "ScreenFrames.h"
+#include <opencv2/imgproc.hpp>
 
-client_frames::client_frames(std::string wnd_name)
-{
-	_first_call = true;
-	_top_level_window = NULL;
-	if(wnd_name.length())
-	{
-		_top_level_window = FindWindow(NULL, wnd_name.c_str());
-		if(_top_level_window != NULL)
-			_first_call = false;
-	}
-}
-void client_frames::reset()
-{
-	_first_call = true;
-}
-cv::Mat client_frames::nextFrame()
-{
-	if(_first_call)
-		_top_level_window = GetWindowFromPoint();
-	cv::Mat res;
-	if(_top_level_window != NULL)
-	{
-		res = hwnd2mat(_top_level_window);
-	}
-	return res;
-}
-HWND client_frames::GetWindowFromPoint()
+void screen_frames::reset()
+{}
+cv::Mat screen_frames::nextFrame()
 {
 	HWND hwndDesktop = GetDesktopWindow();
-	cv::Mat dt = hwnd2mat(hwndDesktop);
-	cv::imshow(WND_NAME_SELECT_WND, dt);
-	cv::Point mouse_point(-1, -1);
-	cv::setMouseCallback(WND_NAME_SELECT_WND, MousePoint, &mouse_point);
-	while(1)
-	{
-		int key = cv::waitKey(0);
-		if(key == 27 || key == -1)
-			break;
-	}
-	if(mouse_point.x == -1 && mouse_point.y == -1)
-		return NULL;
-	POINT mp = {mouse_point.x, mouse_point.y};
-	HWND res = WindowFromPoint(mp);
-	if(res != NULL)
-	{
-		_first_call = false;
-	}
+	cv::Mat res = hwnd2mat(hwndDesktop);
+	//CloseHandle(hwndDesktop); // is it special handle?
 	return res;
 }
-
 cv::Mat hwnd2mat(HWND hwnd)
 {
-	if(!IsWindow(hwnd))
-		return cv::Mat();
     HDC hwindowDC,hwindowCompatibleDC;
 
     int height,width,srcheight,srcwidth;
@@ -111,14 +67,4 @@ cv::Mat RemoveChannel(cv::Mat mat)
 	cv::Mat img;
 	cv::merge(channels, img);
 	return img;
-}
-void MousePoint(int mouse_event, int x, int y, int flags, void* param)
-{
-	cv::Point* mouse_point = (cv::Point*) param;
-	if(mouse_event == cv::EVENT_LBUTTONUP)
-	{
-		mouse_point->x = x;
-		mouse_point->y = y;
-		cv::destroyWindow(WND_NAME_SELECT_WND);
-	}
 }
