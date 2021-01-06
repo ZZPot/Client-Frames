@@ -4,7 +4,7 @@
 
 int main()
 {
-	window_frames cf;
+	window_frames cf = false;
 	while(cv::waitKey(15) != 27)
 	{
 		cv::Mat frame = cf.nextFrame();

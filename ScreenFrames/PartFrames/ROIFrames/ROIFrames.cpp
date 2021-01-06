@@ -1,8 +1,9 @@
 #include "ROIFrames.h"
 #include <opencv2/imgproc.hpp>
 #include <opencv2/highgui.hpp>
-#include <opencv2/tracking/tracker.hpp>
-#include "../../../common/common.hpp"
+#include <opencv2/tracking/tracking.hpp>
+#include "OpenCV_common.hpp"
+#include "common.h"
 
 roi_frames::roi_frames()
 {
